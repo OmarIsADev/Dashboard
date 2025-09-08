@@ -1,24 +1,42 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import Index from "./pages";
+import Dashboard from "./pages/dashboard";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import Posts from "./pages/posts";
 import Tasks from "./pages/tasks";
+import DashboardLayout from "./components/core/dashboardLayout";
+import Login from "./pages/login";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Index />,
+    element: <Login />,
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <DashboardLayout>
+        <Dashboard />
+      </DashboardLayout>
+    ),
   },
   {
     path: "/posts",
-    element: <Posts />,
+    element: (
+      <DashboardLayout>
+        <Posts />
+      </DashboardLayout>
+    ),
   },
   {
     path: "/tasks",
-    element: <Tasks />,
+    element: (
+      <DashboardLayout>
+        <Tasks />
+      </DashboardLayout>
+    ),
   },
 ]);
 

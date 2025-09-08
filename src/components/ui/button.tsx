@@ -42,6 +42,7 @@ const Button = ({
         variantClassName,
         isLoading && `cursor-not-allowed ${isLoadingClassName}`,
       )}
+      disabled={isLoading}
       style={style}
       onClick={onClick}
       {...props}
@@ -49,7 +50,7 @@ const Button = ({
       <Loader2
         className={cn(
           "mr-0 w-0 animate-spin transition-all",
-          isLoading && "block animate-spin w-6 mr-2",
+          isLoading && "mr-2 block w-6 animate-spin",
         )}
       />
       {children}

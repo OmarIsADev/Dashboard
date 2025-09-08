@@ -11,13 +11,16 @@ function Tasks() {
     dispatch(fetchTasks());
   }, [dispatch]);
 
+  useEffect(() => {
+    console.log(tasks)
+  }, [tasks])
+
   return (
     <div>
       Tasks: {tasks.status}
       <div>
-        {tasks.data.map((task) => (
-          <div key={task.id}>{task.title}</div>
-        ))}
+        {tasks.status === "succeeded" &&
+          tasks.data.map((task) => <div key={task.id}>{task.title}</div>)}
       </div>
     </div>
   );

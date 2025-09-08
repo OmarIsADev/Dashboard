@@ -5,6 +5,13 @@ import {
   LucideGalleryThumbnails,
 } from "lucide-react";
 import { Link, useLocation } from "react-router";
+import useAuth from "../../hooks/useAuth";
+import {
+  Popover,
+  PopoverContent,
+  PopoverItem,
+  PopoverTrigger,
+} from "../ui/popover";
 
 const routes = [
   {
@@ -29,9 +36,10 @@ const baseButtonClass =
 
 function Navbar() {
   const { pathname } = useLocation();
+  const { user, logout } = useAuth();
 
   return (
-    <div className="flex w-full max-w-56 flex-col items-center justify-between gap-8">
+    <div className="flex w-full max-w-64 flex-col items-center justify-between gap-8">
       <div className="flex w-full flex-col items-center gap-8">
         <h1 className="text-xl">Dashboard</h1>
         <div className="flex w-full flex-col gap-2">
@@ -49,20 +57,22 @@ function Navbar() {
       </div>
 
       {/* user's data */}
-      <div
-        className={`w-full cursor-pointer !justify-between ${baseButtonClass}`}
-      >
-        <div className="flex items-center gap-1">
-          <img
-            className="size-6 rounded-full"
-            src={`https://placehold.co/48?text=${"o"}`}
-          />
-          <p>test@gmail.com</p>
-        </div>
-        <div>
-          <ChevronDown />
-        </div>
-      </div>
+      <Popover>
+        <PopoverTrigger>
+          <div
+            className={`w-full cursor-pointer !justify-between ${baseButtonClass}`}
+          >
+            <div className="flex w-full items-center gap-1">
+              <img className="size-6 rounded-full" src={user.img} />
+              <p>{user.email}</p>
+            </div>
+            <ChevronDown className="size-6 transition-[rotate] group-data-[isOpen=true]:rotate-180" />
+          </div>
+        </PopoverTrigger>
+        <PopoverContent>
+          <PopoverItem onClick={logout}>Logout</PopoverItem>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

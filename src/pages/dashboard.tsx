@@ -3,7 +3,7 @@ import type { AppDispatch, RootState } from "../store/store";
 import { useEffect } from "react";
 import { fetchUsers } from "../store/slices/usersSlice";
 
-function Index() {
+function Dashboard() {
   const users = useSelector((state: RootState) => state.users);
   const dispatch: AppDispatch = useDispatch();
 
@@ -23,4 +23,4 @@ function Index() {
   );
 }
 
-export default Index;
+export default Dashboard;
