@@ -57,9 +57,9 @@ export const PopoverTrigger = ({ children }: PopoverProps) => {
 
   return (
     <button
-      ref={triggerRef}
-      data-isopen={isOpen}
       className="group cursor-pointer"
+      data-isopen={isOpen}
+      ref={triggerRef}
       onClick={openPopover}
     >
       {children}
@@ -75,11 +75,11 @@ export const PopoverItem = ({
 
   return (
     <button
+      className="w-full cursor-pointer rounded-md px-2 py-1 text-start text-sm hover:bg-zinc-500/35"
       onClick={() => {
         onClick?.();
         closePopover();
       }}
-      className="w-full cursor-pointer rounded-md px-2 py-1 text-start text-sm hover:bg-zinc-500/35"
     >
       {children}
     </button>
@@ -89,7 +89,10 @@ export const PopoverItem = ({
 export const PopoverContent = ({ children }: PopoverProps) => {
   const { isOpen, closePopover, triggerRef } = usePopoverContext();
   const contentRef = useRef<HTMLDivElement>(null);
-  const [positionClass, setPositionClass] = useState("");
+  const [position, setPosition] = useState({
+    top: 0,
+    left: 0,
+  });
 
   useEffect(() => {
     // Handler to close the popover if a click occurs outside of it or its trigger.
@@ -111,14 +114,28 @@ export const PopoverContent = ({ children }: PopoverProps) => {
     const calculatePosition = () => {
       if (triggerRef.current) {
         const rect = triggerRef.current.getBoundingClientRect();
+        const content = contentRef.current?.getBoundingClientRect();
+
         const spaceBelow = window.innerHeight - rect.bottom;
 
-        const requiredHeight = (contentRef.current?.offsetHeight || 0) + 32;
+        const requiredHeight = (contentRef.current?.offsetHeight || 0) + 8;
 
         if (spaceBelow < requiredHeight && rect.top > requiredHeight) {
-          setPositionClass("bottom-full mb-2");
+          setPosition({
+            top: rect.top - requiredHeight,
+            left:
+              rect.left + (content?.width || 0) > document.body.clientWidth
+                ? document.body.clientWidth - (content?.width || 0)
+                : rect.left,
+          });
         } else {
-          setPositionClass("top-full mt-2");
+          setPosition({
+            top: rect.bottom,
+            left:
+              rect.left + (content?.width || 0) > document.body.clientWidth
+                ? document.body.clientWidth - (content?.width || 0)
+                : rect.left,
+          });
         }
       }
     };
@@ -140,11 +157,12 @@ export const PopoverContent = ({ children }: PopoverProps) => {
     <div
       ref={contentRef}
       className={cn(
-        "absolute z-10 scale-100 transform rounded-lg border border-zinc-400/20 bg-zinc-700/30 p-1 shadow-xl transition-transform duration-300 ease-out",
-        positionClass,
+        "border-border-dark bg-bg-dark-panel text-text-light fixed z-50 rounded-lg border p-1 shadow-xl",
       )}
       style={{
         minWidth: `${triggerRef.current?.offsetWidth}px`,
+        top: `${position.top}px`,
+        left: `${position.left}px`,
       }}
     >
       {children}

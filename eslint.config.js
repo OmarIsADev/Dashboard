@@ -1,18 +1,22 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { globalIgnores } from 'eslint/config'
+import js from "@eslint/js";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import stylistic from "@stylistic/eslint-plugin";
+import tseslint from "typescript-eslint";
+import { globalIgnores } from "eslint/config";
 
 export default tseslint.config([
-  globalIgnores(['dist']),
+  globalIgnores(["dist"]),
   {
-    files: ['**/*.{ts,tsx}'],
+    plugins: {
+      "@stylistic": stylistic,
+    },
+    files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
+      reactHooks.configs["recommended-latest"],
       reactRefresh.configs.vite,
     ],
     languageOptions: {
@@ -20,7 +24,15 @@ export default tseslint.config([
       globals: globals.browser,
     },
     rules: {
-      'react-hooks/exhaustive-deps': 'off',
-    }
+      "@stylistic/jsx-sort-props": [
+        "warn",
+        {
+          callbacksLast: true,
+          shorthandFirst: true,
+          multiline: "last",
+          noSortAlphabetically: false,
+        },
+      ],
+    },
   },
-])
+]);
