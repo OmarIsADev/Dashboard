@@ -1,7 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
 import { useEffect, useState } from "react";
-import { removeUser, setUser, type LoginUser } from "../store/slices/userSlice";
+import {
+  removeUserAndToken,
+  setToken,
+  setUser,
+  type LoginUser,
+} from "../store/slices/userSlice";
 import { useLocation, useNavigate } from "react-router";
 
 interface returns {
@@ -25,45 +30,49 @@ function useAuth(): returns {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!["/"].includes(pathname) && !user.email) {
+    if (!["/"].includes(pathname) && !user.token) {
       navigate("/");
+    } else if (pathname === "/" && user.token) {
+      navigate("/dashboard");
     }
-  }, [navigate, pathname, user.email]);
+
+    if (user.token) {
+      // pass img if exists or it creates default placeholder with first letter of each firstName and lastName
+      dispatch(
+        setUser({
+          email: "admin@example.com",
+          firstName: "John",
+          lastName: "Doe",
+          img: "",
+        }),
+      );
+    }
+  }, [navigate, pathname, user.token]);
 
   const login = (email: string, password: string) => {
     setIsLoading(true);
 
     // Call API endpoint instead
     if (email === "admin@example.com" && password === "admin") {
-      localStorage.setItem("token", "mocked-JWT-" + email);
+      // Handle api response
+      dispatch(setToken("mocked-jwt-" + email));
 
-      setTimeout(() => {
-        // Handle api response
-        // pass img if exists or it creates default placeholder with first letter of each firstName and lastName
-        dispatch(
-          setUser({ email, firstName: "John", lastName: "Doe", img: "" }),
-        );
-
-        navigate("/dashboard");
-        setIsLoading(false);
-      }, 100);
+      navigate("/dashboard");
+      setIsLoading(false);
     } else {
       setError("Invalid credentials");
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    dispatch(removeUser());
-  };
+  const logout = () => dispatch(removeUserAndToken());
 
   return {
     login,
     logout,
     user,
     isLoading,
-    isLoggedIn: !!user.email,
+    isLoggedIn: !!user.token,
     error,
     setError,
   };

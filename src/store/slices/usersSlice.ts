@@ -10,7 +10,7 @@ export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   return data;
 });
 
-interface User {
+export interface User {
   id: number;
   name: string;
   username: string;
