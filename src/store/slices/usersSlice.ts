@@ -20,18 +20,9 @@ export interface User {
     suite: string;
     city: string;
     zipcode: string;
-    geo: {
-      lat: string;
-      lng: string;
-    };
   };
   phone: string;
   website: string;
-  company: {
-    name: string;
-    catchPhrase: string;
-    bs: string;
-  };
 }
 
 const initialState: {
@@ -48,8 +39,13 @@ const usersSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    addUser: (state, action) => {
-      state.data.push(action.payload);
+    addUser: (state, action: PayloadAction<Omit<User, "id">>) => {
+      const user: User = {
+        ...action.payload,
+        id: (state.data.at(-1)?.id || 0) + 1,
+      };
+
+      state.data.push(user);
     },
 
     removeUser: (state, action: PayloadAction<number>) => {

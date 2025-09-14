@@ -28,39 +28,39 @@ function Login() {
   return (
     <div id="login">
       <form
+        className="flex flex-col items-center gap-6 rounded-xl bg-bg-card p-8 shadow-lg"
         onSubmit={handleLogin}
-        className="flex flex-col items-center gap-6 rounded-xl bg-white p-8 shadow-lg"
       >
-        <User2 className="size-24 rounded-full bg-blue-500 text-white" />
+        <User2 className="size-24 rounded-full bg-accent-blue text-text-light" />
         <div className="space-y-px">
           <h1 className="text-2xl font-bold">Welcome Back</h1>
           <p>Sign in to your account</p>
         </div>
         <div className="flex flex-col gap-2">
           <Input
-            onChange={() => setError("")}
-            label="Email"
-            placeholder="Email"
-            Prefix={Mail}
-            name="email"
-            type="email"
             required
+            Prefix={Mail}
             error={!!error}
+            label="Email"
+            name="email"
+            placeholder="Email"
+            type="email"
+            onChange={() => setError("")}
           />
           <Input
-            onChange={() => setError("")}
-            label="Password"
-            placeholder="Password"
-            Prefix={Lock}
-            name="password"
-            type="password"
             required
+            Prefix={Lock}
             error={!!error}
+            label="Password"
+            name="password"
+            placeholder="Password"
+            type="password"
+            onChange={() => setError("")}
           />
         </div>
-        {error && <small className="text-red-600 -mt-6 self-start">{error}</small>}
+        {error && <small className="text-error-text -mt-6 self-start">{error}</small>}
         <div className="w-full text-center">
-          <Button isLoading={isLoading} variant="primary" type="submit">
+          <Button isLoading={isLoading} type="submit" variant="primary">
             Sign In
           </Button>
           <small>Demo: admin@example.com - admin</small>

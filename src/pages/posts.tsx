@@ -8,6 +8,7 @@ function Posts() {
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
+    if (posts.data.length > 0) return;
     dispatch(fetchPosts());
   }, [dispatch]);
 

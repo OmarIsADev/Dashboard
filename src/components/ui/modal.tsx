@@ -1,9 +1,17 @@
 import { X } from "lucide-react";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import React, {
+  cloneElement,
+  createContext,
+  isValidElement,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
+import Button, { type ButtonProps } from "./button";
 
 interface ModalContextType {
-  isOpen: boolean;
+  open: boolean;
   openModal: () => void;
   closeModal: () => void;
 }
@@ -19,33 +27,112 @@ const useModalContext = () => {
 };
 
 interface ModalProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-export const Modal = ({ children }: ModalProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+export const Modal = ({
+  children,
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen?: boolean;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+} & ModalProps) => {
+  const [open, setOpen] = useState<boolean>(false);
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const openModal = () => {
+    setIsOpen?.(true);
+    setOpen(true);
+  };
+  const closeModal = () => {
+    setIsOpen?.(false);
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    setOpen(isOpen ?? false);
+  }, [isOpen]);
 
   // The context value includes the state and the functions to change it
-  const value: ModalContextType = { isOpen, openModal, closeModal };
+  const value: ModalContextType = { open, openModal, closeModal };
 
   return (
     <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
   );
 };
 
-export const ModalTrigger = ({ children }: ModalProps) => {
-  const { openModal } = useModalContext();
+export const ModalClose = ({
+  children,
+  ...props
+}: {
+  children: React.ReactElement | string;
+} & ButtonProps) => {
+  const { closeModal } = useModalContext();
 
-  return <button onClick={openModal}>{children}</button>;
+  if (isValidElement(children)) {
+    return cloneElement(
+      children as React.ReactElement<{ onClick: () => void }>,
+      { onClick: closeModal },
+    );
+  } else {
+    return (
+      <Button
+        variant="bordered"
+        onClick={(e) => {
+          props.onClick?.(e);
+          closeModal();
+        }}
+        {...props}
+      >
+        {children}
+      </Button>
+    );
+  }
 };
 
-export const ModalContent = ({ children }: ModalProps) => {
-  const { isOpen, closeModal } = useModalContext();
+export const ModalSubmit = ({
+  children,
+  ...props
+}: { children: React.ReactElement | string } & ButtonProps) => {
+  const { closeModal } = useModalContext();
 
-  if (!isOpen) {
+  if (isValidElement(children)) {
+    return cloneElement(
+      children as React.ReactElement<{ onClick: () => void }>,
+      { onClick: closeModal },
+    );
+  } else {
+    return (
+      <Button type="submit" variant="primary" onClick={closeModal} {...props}>
+        {children}
+      </Button>
+    );
+  }
+};
+
+export const ModalTrigger = ({ children, onClick, ...props }: ButtonProps) => {
+  const { openModal } = useModalContext();
+
+  return (
+    <Button
+      onClick={(e) => {
+        openModal();
+        onClick?.(e);
+      }}
+      {...props}
+    >
+      {children}
+    </Button>
+  );
+};
+
+export const ModalContent = ({
+  children,
+  title,
+}: { title: string } & ModalProps) => {
+  const { open, closeModal } = useModalContext();
+
+  if (!open) {
     return null;
   }
 
@@ -60,17 +147,20 @@ export const ModalContent = ({ children }: ModalProps) => {
 
       {/* Modal content container. Prevents closing when clicking inside. */}
       <div
-        className="relative z-10 m-auto w-full max-w-lg scale-100 transform rounded-xl bg-white p-8 text-zinc-900 shadow-2xl transition-transform duration-300 ease-out"
+        className="bg-primary-light text-text-dark relative z-10 m-auto w-full max-w-lg scale-100 transform rounded-xl px-8 py-4 shadow-2xl transition-transform duration-300 ease-out"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
-        <button
-          onClick={closeModal}
-          className="absolute top-4 right-4 cursor-pointer text-gray-400 transition-colors duration-200 hover:text-gray-600"
-          aria-label="Close"
-        >
-          <X />
-        </button>
+        {/* Header and Close button */}
+        <div className="mb-4 flex justify-between">
+          <h1 className="text-2xl font-medium">{title}</h1>
+          <button
+            aria-label="Close"
+            className="text-text-dark/50 hover:text-text-dark cursor-pointer transition-colors duration-200"
+            onClick={closeModal}
+          >
+            <X />
+          </button>
+        </div>
 
         {children}
       </div>

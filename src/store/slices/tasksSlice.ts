@@ -7,7 +7,7 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
   return data;
 });
 
-interface Task {
+export interface Task {
   userId: number;
   id: number;
   title: string;

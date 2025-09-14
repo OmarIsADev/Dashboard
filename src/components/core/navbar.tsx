@@ -1,8 +1,8 @@
 import {
-  CheckSquare,
   ChevronDown,
   Home,
   LucideGalleryThumbnails,
+  Users2,
 } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import useAuth from "../../hooks/useAuth";
@@ -20,9 +20,9 @@ const routes = [
     Icon: <Home />,
   },
   {
-    href: "/tasks",
-    title: "Tasks",
-    Icon: <CheckSquare />,
+    href: "/users",
+    title: "Users",
+    Icon: <Users2 />,
   },
   {
     href: "/posts",
@@ -32,7 +32,7 @@ const routes = [
 ];
 
 const baseButtonClass =
-  "flex items-center justify-start gap-1 rounded-xl px-4 py-2 transition-[background] hover:bg-zinc-100/10";
+  "flex items-center justify-start gap-1 rounded-xl px-4 py-2 transition-[background] hover:bg-primary-light/10";
 
 function Navbar() {
   const { pathname } = useLocation();
@@ -48,8 +48,8 @@ function Navbar() {
         <div className="flex w-full flex-col gap-2">
           {routes.map((route) => (
             <Link
+              className={`data-[active=true]:bg-primary-light/10 ${baseButtonClass}`}
               data-active={route.href === pathname}
-              className={`data-[active=true]:bg-zinc-100/10 ${baseButtonClass}`}
               key={route.href}
               to={route.href}
             >

@@ -1,0 +1,51 @@
+import { cn } from "@sglara/cn";
+import type { HTMLAttributes } from "react";
+
+function CardGroup({ children, ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "flex items-center *:rounded-none *:not-last:border-r-0 *:nth-[1]:rounded-l-lg *:nth-last-[1]:rounded-r-lg",
+        props.className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Card({
+  title,
+  className,
+  classNames,
+  children,
+  ...props
+}: {
+  title?: string;
+  classNames?: { title?: string; wrapper?: string };
+} & HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "bg-bg-card border-border-light flex w-full flex-col gap-3 rounded-lg border p-5 text-2xl leading-8 font-bold",
+        className,
+        classNames?.wrapper,
+      )}
+      {...props}
+    >
+      {title && (
+        <h1
+          className={cn(
+            "text-text-dark/80 text-base leading-3.5 font-medium",
+            classNames?.title,
+          )}
+        >
+          {title}
+        </h1>
+      )}
+      {children}
+    </div>
+  );
+}
+
+export { Card, CardGroup };

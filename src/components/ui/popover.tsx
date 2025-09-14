@@ -46,21 +46,24 @@ export const Popover = ({ children }: PopoverProps) => {
   };
 
   return (
-    <PopoverContext.Provider value={value}>
-      <div className="relative inline-block">{children}</div>
-    </PopoverContext.Provider>
+    <PopoverContext.Provider value={value}>{children}</PopoverContext.Provider>
   );
 };
 
-export const PopoverTrigger = ({ children }: PopoverProps) => {
+export const PopoverTrigger = ({
+  className,
+  children,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   const { openPopover, triggerRef, isOpen } = usePopoverContext();
 
   return (
     <button
-      className="group cursor-pointer"
+      className={cn("group cursor-pointer", className)}
       data-isopen={isOpen}
       ref={triggerRef}
       onClick={openPopover}
+      {...props}
     >
       {children}
     </button>

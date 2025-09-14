@@ -5,9 +5,10 @@ import Dashboard from "./pages/dashboard";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 import Posts from "./pages/posts";
-import Tasks from "./pages/tasks";
+import Users from "./pages/users";
 import DashboardLayout from "./components/core/dashboardLayout";
 import Login from "./pages/login";
+import { Toaster } from "sonner";
 
 const router = createBrowserRouter([
   {
@@ -31,10 +32,10 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/tasks",
+    path: "/users",
     element: (
       <DashboardLayout>
-        <Tasks />
+        <Users />
       </DashboardLayout>
     ),
   },
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
+    <Toaster richColors position="top-right" />
     <RouterProvider router={router} />
   </Provider>,
 );

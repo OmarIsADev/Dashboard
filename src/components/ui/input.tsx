@@ -5,6 +5,10 @@ interface Input extends React.InputHTMLAttributes<HTMLInputElement> {
   Prefix?: React.ComponentType<LucideProps>;
   Suffix?: React.ComponentType<LucideProps>;
   className?: string;
+  classNames?: {
+    base?: string;
+    wrapper?: string;
+  };
   label?: string;
   error?: boolean;
   errorMessage?: string;
@@ -14,19 +18,22 @@ function Input({
   Prefix,
   Suffix,
   className,
+  required,
+  classNames,
   label,
   error,
   errorMessage,
   ...props
 }: Input) {
   return (
-    <label className="w-full">
-      <small>{label}</small>
-      <div className="relative">
+    <label className={cn("w-full", classNames?.base)}>
+      {label && <small>{label + (required ? " *" : "")}</small>}
+      <div className={cn("relative", classNames?.wrapper)}>
         {Prefix && (
           <Prefix className="absolute top-1/2 left-6 -translate-1/2" />
         )}
         <input
+          required={required}
           className={cn(
             "w-full rounded-md border border-zinc-900 p-2",
             error && "border-red-600",

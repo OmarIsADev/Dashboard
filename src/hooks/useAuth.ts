@@ -8,6 +8,7 @@ import {
   type LoginUser,
 } from "../store/slices/userSlice";
 import { useLocation, useNavigate } from "react-router";
+import { toast } from "sonner";
 
 interface returns {
   login: (email: string, password: string) => void;
@@ -59,6 +60,7 @@ function useAuth(): returns {
 
       navigate("/dashboard");
       setIsLoading(false);
+      toast.success("Logged in successfully");
     } else {
       setError("Invalid credentials");
       setIsLoading(false);

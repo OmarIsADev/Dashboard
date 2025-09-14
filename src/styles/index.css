@@ -1,5 +1,87 @@
 @import "tailwindcss";
 
+@theme {
+  /* --- Primary Colors --- */
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-light: var(--color-primary-light);
+
+  /* --- Text Colors --- */
+  --color-text-light: var(--color-text-light);
+  --color-text-dark: var(--color-text-dark);
+  --color-text-secondary: var(--color-text-secondary);
+
+  /* --- Accent Colors (for interactive elements) --- */
+  --color-accent-blue: var(--color-accent-blue);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-active: var(--color-accent-active);
+
+  /* --- Border & Divider Colors --- */
+  --color-border-light: var(--color-border-light);
+  --color-border-dark: var(--color-border-dark);
+
+  /* --- Table Specific Colors --- */
+  --color-table-header-bg: var(--color-table-header-bg);
+  --color-table-header-text: var(--color-table-header-text);
+  --color-table-row-hover: var(--color-table-row-hover);
+  --color-table-border: var(--color-table-border);
+
+  /* --- Backgrounds --- */
+  --color-bg-body: var(--color-bg-body);
+  --color-bg-card: var(--color-bg-card);
+  --color-bg-dark-panel: var(--color-bg-dark-panel);
+
+  /* --- Notification Colors --- */
+  --color-success-bg: var(--color-success-bg);
+  --color-success-text: var(--color-success-text);
+  --color-error-bg: var(--color-error-bg);
+  --color-error-text: var(--color-error-text);
+  --color-info-bg: var(--color-info-bg);
+  --color-info-text: var(--color-info-text);
+  --color-warning-bg: var(--color-warning-bg);
+  --color-warning-text: var(--color-warning-text);
+}
+
+:root {
+  /* --- Primary Colors --- */
+  --color-primary-dark: #1a1a1a; /* For the dark sidebar background */
+  --color-primary-light: #f7f7f7; /* For the main content background */
+
+  /* --- Text Colors --- */
+  --color-text-light: #ffffff; /* For text on dark backgrounds (e.g., sidebar) */
+  --color-text-dark: #333333; /* For text on light backgrounds (e.g., main content) */
+  --color-text-secondary: #666666; /* For less prominent text */
+
+  /* --- Accent Colors (for interactive elements) --- */
+  --color-accent-blue: #007bff; /* A common blue for links, buttons, active states */
+  --color-accent-hover: #0056b3; /* Darker blue for hover states */
+  --color-accent-active: #003f7f; /* Even darker blue for active/clicked states */
+
+  /* --- Border & Divider Colors --- */
+  --color-border-light: #e0e0e0; /* Light border for cards, tables */
+  --color-border-dark: #444444; /* Darker border, possibly for separating sections in dark mode */
+
+  /* --- Table Specific Colors --- */
+  --color-table-header-bg: #333333; /* Background for table headers */
+  --color-table-header-text: #ffffff; /* Text color for table headers */
+  --color-table-row-hover: #f0f0f0; /* Background for hovered table rows */
+  --color-table-border: #dddddd; /* General table border */
+
+  /* --- Backgrounds --- */
+  --color-bg-body: #f0f2f5; /* Overall body background, slightly off-white */
+  --color-bg-card: #ffffff; /* Background for cards or distinct sections */
+  --color-bg-dark-panel: #222222; /* Slightly lighter dark for inner panels on dark sidebar */
+
+  /* --- Notification Colors --- */
+  --color-success-bg: #d4edda; /* Light green for success notifications */
+  --color-success-text: #155724; /* Dark green text for success notifications */
+  --color-error-bg: #f8d7da; /* Light red for error notifications */
+  --color-error-text: #e7000b; /* Dark red text for error notifications */
+  --color-info-bg: #d1ecf1; /* Light blue for info notifications */
+  --color-info-text: #0c5460; /* Dark blue text for info notifications */
+  --color-warning-bg: #fff3cd; /* Light yellow for warning notifications */
+  --color-warning-text: #856404; /* Dark yellow text for warning notifications */
+}
+
 body {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -7,8 +89,8 @@ body {
 
   overflow: hidden;
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--color-text-light);
+  background-color: var(--color-primary-dark);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

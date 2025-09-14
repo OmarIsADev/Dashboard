@@ -1,6 +1,6 @@
 #login {
-  background-color: #f1f1f1;
-  color: #333;
+  background-color: var(--color-bg-body);
+  color: var(--color-text-dark);
   display: flex;
   justify-content: center;
   align-items: center;
