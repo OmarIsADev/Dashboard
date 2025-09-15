@@ -46,8 +46,8 @@ const columns: columnType<Task & { user: User }>[] = [
   },
   {
     header: "Title",
-    accessorKey: "title",
     id: "title",
+    Cell: ({ data }) => <p className="line-clamp-2">{data.title}</p>,
   },
   {
     header: "Completed",
@@ -62,7 +62,7 @@ const columns: columnType<Task & { user: User }>[] = [
   {
     header: "assignee",
     id: "user",
-    Cell: ({ data }) => data.user.name,
+    Cell: ({ data }) => <p className="line-clamp-2">{data.user.name}</p>,
   },
 ];
 
@@ -87,9 +87,15 @@ function Dashboard() {
   return (
     <div className="flex flex-col gap-4">
       <CardGroup>
-        <Card title="Posts">{data.posts.data.length}</Card>
-        <Card title="Users">{data.users.data.length}</Card>
-        <Card title="test">63</Card>
+        <Card analytic title="Posts">
+          {data.posts.data.length}
+        </Card>
+        <Card analytic title="Users">
+          {data.users.data.length}
+        </Card>
+        <Card analytic title="test">
+          63
+        </Card>
       </CardGroup>
 
       <div className="grid grid-cols-3 gap-4 max-2xl:grid-cols-1">
@@ -131,7 +137,7 @@ function Dashboard() {
           <Card
             className="text-base"
             classNames={{ title: "text-xl text-text-dark font-bold mb-4" }}
-            title="Sales"
+            title="Engagement"
           >
             <ResponsiveContainer height={300} width="100%">
               <LineChart data={usersChartData}>

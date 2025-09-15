@@ -25,6 +25,7 @@ import {
   ModalTrigger,
 } from "../components/ui/modal";
 import { toast } from "sonner";
+import { Link } from "react-router";
 
 const usersColumns: columnType<User>[] = [
   {
@@ -60,8 +61,16 @@ const usersColumns: columnType<User>[] = [
           <Ellipsis />
         </PopoverTrigger>
         <PopoverContent>
-          <PopoverItem>Modify</PopoverItem>
-          <PopoverItem onClick={() => store.dispatch(removeUser(data.id))}>
+          <Link to={`/users/${data.id}`}>
+            <PopoverItem>View</PopoverItem>
+          </Link>
+          <Link to={`/users/${data.id}?mode=edit`}>
+            <PopoverItem>Modify</PopoverItem>
+          </Link>
+          <PopoverItem
+            className="transition duration-75 hover:text-red-500"
+            onClick={() => store.dispatch(removeUser(data.id))}
+          >
             Delete
           </PopoverItem>
         </PopoverContent>
@@ -72,6 +81,8 @@ const usersColumns: columnType<User>[] = [
 
 function Users() {
   const users = useSelector((state: RootState) => state.users);
+
+  const [search, setSearch] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
   const [isAddingUser, setIsAddingUser] = useState(false);
@@ -122,7 +133,7 @@ function Users() {
       website: { value: string };
     } = event;
 
-    const data: Omit<User, "id"> = {
+    const data: Omit<User, "id" | "img"> = {
       name,
       username,
       email,
@@ -161,8 +172,10 @@ function Users() {
         <Input
           Prefix={Search}
           className="h-10"
-          classNames={{ base: "max-w-lg" }}
+          classNames={{ base: "max-w-xs" }}
           placeholder="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
         <div className="flex gap-1">
           <Modal isOpen={isAddingUser} setIsOpen={setIsAddingUser}>
@@ -182,7 +195,14 @@ function Users() {
           </Button>
         </div>
       </div>
-      <DataTable<User> columns={usersColumns} data={users.data} />
+      <DataTable<User>
+        columns={usersColumns}
+        data={users.data.filter(
+          (user) =>
+            user.name.toLowerCase().includes(search.toLowerCase()) ||
+            user.email.toLowerCase().includes(search.toLowerCase()),
+        )}
+      />
     </div>
   );
 }
@@ -200,7 +220,12 @@ const UserForm = ({
 
       <div className="flex gap-4">
         <Input required label="Name" name="name" placeholder="e.g. John Doe" />
-        <Input required label="Username" name="username" placeholder="e.g. johndoe" />
+        <Input
+          required
+          label="Username"
+          name="username"
+          placeholder="e.g. johndoe"
+        />
       </div>
       <Input
         required
@@ -208,7 +233,7 @@ const UserForm = ({
         name="email"
         placeholder="e.g. 8yTJ3@example.com"
         type="email"
-        />
+      />
       <Input label="phone" name="phone" placeholder="e.g. 123456789" />
       <Input
         label="Website"

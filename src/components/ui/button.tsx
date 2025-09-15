@@ -28,7 +28,7 @@ const Button = ({
     primary: "bg-accent-blue hover:bg-accent-hover text-text-light",
     secondary: "bg-gray-300 hover:bg-gray-400 text-gray-800",
     bordered: "bg-trasparent border border-text-dark text-text-dark",
-    ghost: "bg-trasparent text-zinc-500 hover:bg-zinc-200",
+    ghost: "bg-trasparent text-text-dark hover:bg-text-dark/10",
     danger: "bg-error-text hover:bg-red-700 text-white",
   }[variant];
 
@@ -45,7 +45,7 @@ const Button = ({
       disabled={isLoading}
       style={style}
       className={cn(
-        "inline-flex w-full h-fit cursor-pointer items-center justify-center rounded-md px-4 py-2",
+        "inline-flex w-full h-fit cursor-pointer items-center justify-center rounded-md px-4 py-2 transition",
         className,
         variantClassName,
         isLoading && `cursor-not-allowed ${isLoadingClassName}`,

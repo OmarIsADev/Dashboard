@@ -1,14 +1,15 @@
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import Dashboard from "./pages/dashboard";
-import { Provider } from "react-redux";
-import { store } from "./store/store";
-import Posts from "./pages/posts";
-import Users from "./pages/users";
-import DashboardLayout from "./components/core/dashboardLayout";
-import Login from "./pages/login";
 import { Toaster } from "sonner";
+import DashboardLayout from "./components/core/dashboardLayout";
+import Dashboard from "./pages/dashboard";
+import Login from "./pages/login";
+import Posts from "./pages/posts";
+import User from "./pages/user";
+import Users from "./pages/users";
+import { store } from "./store/store";
 
 const router = createBrowserRouter([
   {
@@ -16,28 +17,30 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/dashboard",
-    element: (
-      <DashboardLayout>
-        <Dashboard />
-      </DashboardLayout>
-    ),
-  },
-  {
-    path: "/posts",
-    element: (
-      <DashboardLayout>
-        <Posts />
-      </DashboardLayout>
-    ),
-  },
-  {
-    path: "/users",
-    element: (
-      <DashboardLayout>
-        <Users />
-      </DashboardLayout>
-    ),
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/posts",
+        element: <Posts />,
+      },
+      {
+        path: "/users",
+        children: [
+          {
+            index: true,
+            element: <Users />,
+          },
+          {
+            path: ":userId",
+            element: <User />,
+          },
+        ],
+      },
+    ],
   },
 ]);
 

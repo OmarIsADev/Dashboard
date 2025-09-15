@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@layer utilities {
+  /* leave space for scrollbar */
+  .scrollbar-gutter-stable {
+    scrollbar-gutter: stable;
+  }
+  .scrollbar-gutter-stable-both {
+    scrollbar-gutter: stable both-edges;
+  }
+}
+
 @theme {
   /* --- Primary Colors --- */
   --color-primary-dark: var(--color-primary-dark);

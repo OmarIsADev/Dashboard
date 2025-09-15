@@ -16,7 +16,7 @@ function Chip({ className, color = "success", children }: ChipProps) {
   return (
     <div
       className={cn(
-        "bg-success-bg rounded border py-px px-1 text-center",
+        "bg-success-bg rounded border py-px px-1 text-center text-sm",
         className,
         colorClasses,
       )}

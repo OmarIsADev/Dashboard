@@ -2,6 +2,7 @@ import { cn } from "@sglara/cn";
 import { useState, type ReactElement } from "react";
 import Button from "./button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Card } from "./card";
 
 const ROWSPERPAGE = 10;
 
@@ -53,7 +54,7 @@ function DataTable<T extends { id: number }>({
   }
 
   return (
-    <div className="border-border-light bg-bg-card space-y-2 rounded-xl border p-4">
+    <Card className="text-base font-normal h-fit">
       {header}
       {data.length > 0 ? (
         <div className="overflow-x-scroll">
@@ -142,7 +143,7 @@ function DataTable<T extends { id: number }>({
           </Button>
         </div>
       )}
-    </div>
+      </Card>
   );
 }
 

@@ -7,6 +7,11 @@ import {
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/users");
   const data = await response.json();
+
+  data.map((user: User) => {
+    user.img = `https://robohash.org/${user.name}`;
+  });
+
   return data;
 });
 
@@ -23,6 +28,7 @@ export interface User {
   };
   phone: string;
   website: string;
+  img: string;
 }
 
 const initialState: {
@@ -43,6 +49,7 @@ const usersSlice = createSlice({
       const user: User = {
         ...action.payload,
         id: (state.data.at(-1)?.id || 0) + 1,
+        img: `https://robohash.org/${action.payload.name}`,
       };
 
       state.data.push(user);

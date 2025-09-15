@@ -3,7 +3,6 @@ import React, {
   createContext,
   useContext,
   useState,
-  type ReactNode,
   useRef,
   useEffect,
 } from "react";
@@ -27,7 +26,7 @@ const usePopoverContext = () => {
 };
 
 interface PopoverProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const Popover = ({ children }: PopoverProps) => {
@@ -72,17 +71,23 @@ export const PopoverTrigger = ({
 
 export const PopoverItem = ({
   onClick,
+  className,
   children,
-}: PopoverProps & { onClick?: () => void }) => {
+  ...props
+}: React.HTMLAttributes<HTMLButtonElement>) => {
   const { closePopover } = usePopoverContext();
 
   return (
     <button
-      className="w-full cursor-pointer rounded-md px-2 py-1 text-start text-sm hover:bg-zinc-500/35"
-      onClick={() => {
-        onClick?.();
+      className={cn(
+        "w-full cursor-pointer rounded-md px-2 py-1 text-start text-sm hover:bg-zinc-500/35",
+        className,
+      )}
+      onClick={(e) => {
+        onClick?.(e);
         closePopover();
       }}
+      {...props}
     >
       {children}
     </button>

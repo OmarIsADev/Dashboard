@@ -15,29 +15,33 @@ function CardGroup({ children, ...props }: HTMLAttributes<HTMLDivElement>) {
 }
 
 function Card({
+  analytic,
   title,
   className,
   classNames,
   children,
   ...props
 }: {
+  analytic?: boolean;
   title?: string;
   classNames?: { title?: string; wrapper?: string };
 } & HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "bg-bg-card border-border-light flex w-full flex-col gap-3 rounded-lg border p-5 text-2xl leading-8 font-bold",
+        "bg-bg-card border-border-light flex w-full flex-col gap-3 rounded-lg border p-5",
         className,
         classNames?.wrapper,
+        analytic && "text-2xl leading-8 font-bold",
       )}
       {...props}
     >
       {title && (
         <h1
           className={cn(
-            "text-text-dark/80 text-base leading-3.5 font-medium",
+            "text-text-dark text-xl leading-4 font-semibold",
             classNames?.title,
+            analytic && "text-text-dark/80 text-base leading-3.5 font-medium",
           )}
         >
           {title}

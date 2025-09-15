@@ -1,8 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import {
   createAsyncThunk,
   createSlice,
   type PayloadAction,
 } from "@reduxjs/toolkit";
+
+export const fetchUserPosts = createAsyncThunk(
+  "posts/fetchUserPosts",
+  async (userId: number) => {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/posts?userId=${userId}`,
+    );
+    const data = await response.json();
+    return data;
+  },
+);
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts");
@@ -10,7 +22,7 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   return data;
 });
 
-interface Post {
+export interface Post {
   userId: number;
   id: number;
   title: string;
@@ -51,6 +63,22 @@ const postsSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "";
+      });
+
+    builder
+      .addCase(fetchUserPosts.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchUserPosts.fulfilled, (state, action) => {
+        state.status = "succeeded";
+
+        action.payload.forEach((post: Post) => {
+          state.data.some((p) => p.id === post.id) || state.data.push(post);
+        });
+      })
+      .addCase(fetchUserPosts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "";
       });
