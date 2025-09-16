@@ -45,7 +45,7 @@ const Button = ({
       disabled={isLoading}
       style={style}
       className={cn(
-        "inline-flex w-full h-fit cursor-pointer items-center justify-center rounded-md px-4 py-2 transition",
+        "inline-flex w-full h-10 cursor-pointer items-center justify-center rounded-md px-4 py-2 transition",
         className,
         variantClassName,
         isLoading && `cursor-not-allowed ${isLoadingClassName}`,

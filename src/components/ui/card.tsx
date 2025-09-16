@@ -29,7 +29,7 @@ function Card({
   return (
     <div
       className={cn(
-        "bg-bg-card border-border-light flex w-full flex-col gap-3 rounded-lg border p-5",
+        "bg-bg-card border-border-light flex w-full flex-col gap-3 rounded-xl border p-5",
         className,
         classNames?.wrapper,
         analytic && "text-2xl leading-8 font-bold",

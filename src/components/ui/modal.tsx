@@ -147,11 +147,11 @@ export const ModalContent = ({
 
       {/* Modal content container. Prevents closing when clicking inside. */}
       <div
-        className="bg-primary-light text-text-dark relative z-10 m-auto w-full max-w-lg scale-100 transform rounded-xl px-8 py-4 shadow-2xl transition-transform duration-300 ease-out"
+        className="bg-primary-light text-text-dark relative z-10 m-auto max-h-[calc(100svh-32px)] w-full max-w-lg scale-100 transform overflow-y-auto rounded-xl px-8 py-4 shadow-2xl transition-transform duration-300 ease-out"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header and Close button */}
-        <div className="mb-4 flex justify-between">
+        <div className="mb-4 flex justify-between sticky top-0">
           <h1 className="text-2xl font-medium">{title}</h1>
           <button
             aria-label="Close"

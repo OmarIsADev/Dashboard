@@ -172,14 +172,14 @@ function Users() {
         <Input
           Prefix={Search}
           className="h-10"
-          classNames={{ base: "max-w-xs" }}
+          classNames={{ base: "max-w-64" }}
           placeholder="Search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <div className="flex gap-1">
           <Modal isOpen={isAddingUser} setIsOpen={setIsAddingUser}>
-            <ModalTrigger className="w-fit" variant="bordered">
+            <ModalTrigger className="w-fit truncate" variant="bordered">
               Add User
             </ModalTrigger>
             <ModalContent title="Add User">
