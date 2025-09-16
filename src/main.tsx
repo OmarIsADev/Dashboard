@@ -6,7 +6,6 @@ import { Toaster } from "sonner";
 import DashboardLayout from "./components/core/dashboardLayout";
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/login";
-import Posts from "./pages/posts";
 import User from "./pages/user";
 import Users from "./pages/users";
 import { store } from "./store/store";
@@ -22,10 +21,6 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Dashboard />,
-      },
-      {
-        path: "/posts",
-        element: <Posts />,
       },
       {
         path: "/users",

@@ -1,7 +1,6 @@
 import {
   ChevronDown,
   Home,
-  LucideGalleryThumbnails,
   Users2,
 } from "lucide-react";
 import { Link, useLocation } from "react-router";
@@ -23,11 +22,6 @@ const routes = [
     href: "/users",
     title: "Users",
     Icon: <Users2 />,
-  },
-  {
-    href: "/posts",
-    title: "Posts",
-    Icon: <LucideGalleryThumbnails />,
   },
 ];
 

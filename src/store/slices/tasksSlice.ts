@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -6,6 +7,17 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
   const data = await response.json();
   return data;
 });
+
+export const fetchUserTasks = createAsyncThunk(
+  "tasks/fetchUserTasks",
+  async (userId: number) => {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/todos?userId=${userId}`,
+    );
+    const data = await response.json();
+    return data;
+  },
+);
 
 export interface Task {
   userId: number;
@@ -28,11 +40,15 @@ const tasksSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    addTask: (state, action: PayloadAction<Task>) => {
-      state.data.push(action.payload);
+    addTask: (state, action: PayloadAction<Omit<Task, "id" | "completed">>) => {
+      state.data.push({
+        ...action.payload,
+        id: (state.data.at(-1)?.id || 0) + 1,
+        completed: false,
+      });
     },
 
-    updateTask: (state, action: PayloadAction<number>) => {
+    toggleTask: (state, action: PayloadAction<number>) => {
       state.data.map((task) => {
         if (task.id === action.payload) {
           task.completed = !task.completed;
@@ -41,7 +57,7 @@ const tasksSlice = createSlice({
     },
 
     deleteTask: (state, action: PayloadAction<number>) => {
-      state.data.filter((task) => task.id !== action.payload);
+      state.data = state.data.filter((task) => task.id !== action.payload);
     },
   },
   extraReducers(builder) {
@@ -57,9 +73,25 @@ const tasksSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message || "";
       });
+
+    builder
+      .addCase(fetchUserTasks.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchUserTasks.fulfilled, (state, action) => {
+        state.status = "succeeded";
+
+        action.payload.forEach((task: Task) => {
+          state.data.some((t) => t.id === task.id) || state.data.push(task);
+        });
+      })
+      .addCase(fetchUserTasks.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "";
+      });
   },
 });
 
-export const { addTask, updateTask, deleteTask } = tasksSlice.actions;
+export const { addTask, toggleTask, deleteTask } = tasksSlice.actions;
 
 export default tasksSlice.reducer;

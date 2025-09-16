@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Edit2, Ellipsis, X } from "lucide-react";
+import { Ellipsis, Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,6 +13,12 @@ import Button from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import Input from "../components/ui/input";
 import {
+  Popover,
+  PopoverContent,
+  PopoverItem,
+  PopoverTrigger,
+} from "../components/ui/popover";
+import {
   fetchUserPosts,
   removePost,
   type Post,
@@ -20,11 +26,16 @@ import {
 import { modifyUser, type User as UserType } from "../store/slices/usersSlice";
 import type { AppDispatch, RootState } from "../store/store";
 import {
-  Popover,
-  PopoverContent,
-  PopoverItem,
-  PopoverTrigger,
-} from "../components/ui/popover";
+  addTask,
+  deleteTask,
+  fetchUserTasks,
+  toggleTask,
+  type Task,
+} from "../store/slices/tasksSlice";
+import { cn } from "@sglara/cn";
+import { Modal, ModalContent, ModalTrigger } from "../components/ui/modal";
+
+type modes = "default" | "edit" | "tasks";
 
 function User() {
   const { userId } = useParams();
@@ -40,14 +51,21 @@ function User() {
   const posts: Post[] = data.posts.data.filter(
     (post) => post.userId === Number(userId),
   );
+  const tasks: Task[] = data.tasks.data.filter(
+    (task) => task.userId === Number(userId),
+  );
 
-  const mode: "default" | "edit" =
-    (searchParams.get("mode") as "edit" | undefined) ?? "default";
+  const mode: modes = ["edit", "tasks"].includes(
+    searchParams.get("mode") as modes,
+  )
+    ? (searchParams.get("mode") as modes)
+    : "default";
 
   useEffect(() => {
-    if (posts.length > 0 || !user?.id) return;
+    if (posts.length > 0 || !user) return;
 
-    dispatch(fetchUserPosts(user?.id));
+    dispatch(fetchUserPosts(user.id));
+    dispatch(fetchUserTasks(user.id));
   }, [user]);
 
   if (data.users.status === "loading") return <div>Loading...</div>;
@@ -61,46 +79,70 @@ function User() {
         </Button>
       </div>
     );
+  return (
+    <div className="mx-auto flex max-w-3xl flex-col gap-4">
+      <UserHero user={user} />
 
-  if (mode === "default")
-    return (
-      <div className="mx-auto flex max-w-3xl flex-col gap-4">
-        <UserHero
-          mode="default"
-          setSearchParams={setSearchParams}
-          user={user}
-        />
+      {/* Tabs */}
 
-        <Card title="Recent posts:">
-          {posts.length > 0
-            ? posts.map((post) => (
-                <Post key={post.id} post={post} user={user} />
-              ))
-            : "No posts"}
-        </Card>
+      <div
+        className={cn(
+          "bg-bg-card relative flex w-full cursor-pointer rounded-3xl p-1 text-center",
+          "before:bg-accent-blue before:absolute before:top-1/2 before:left-1/2 before:h-[calc(100%-0.5rem)] before:w-1/3 before:-translate-1/2 before:rounded-xl before:transition-transform before:ease-in-out before:content-['']",
+          mode === "default" && "before:-translate-x-[calc(150%-0.25rem)]",
+          mode === "tasks" && "",
+          mode === "edit" && "before:translate-x-[calc(50%-0.25rem)]",
+        )}
+      >
+        {["default", "tasks", "edit"].map((tab) => (
+          <span
+            key={tab}
+            className={cn(
+              "z-10 flex w-full items-center justify-center transition-colors",
+              mode === tab ? "text-text-light" : "text-text-dark",
+            )}
+            onClick={() => setSearchParams({ mode: tab })}
+          >
+            {tab}
+          </span>
+        ))}
       </div>
-    );
-  else
-    return (
-      <div className="mx-auto flex max-w-3xl flex-col gap-4">
-        <UserHero mode="edit" setSearchParams={setSearchParams} user={user} />
 
-        <Card title="Edit user:">
+      <Card
+        className="relative"
+        title={
+          mode === "edit"
+            ? "Edit user:"
+            : mode === "tasks"
+              ? "User's tasks:"
+              : "Recent posts:"
+        }
+      >
+        {mode === "edit" ? (
           <Form setSearchParams={setSearchParams} user={user} />
-        </Card>
-      </div>
-    );
+        ) : mode === "tasks" ? (
+          <>
+            <TaskForm dispatch={dispatch} userId={user.id} />
+            {tasks.map((task) => (
+              <Task
+                deleteTask={(id) => dispatch(deleteTask(id))}
+                key={task.id}
+                task={task}
+                toggleTask={(id) => dispatch(toggleTask(id))}
+              />
+            ))}
+          </>
+        ) : posts.length > 0 ? (
+          posts.map((post) => <Post key={post.id} post={post} user={user} />)
+        ) : (
+          "No posts"
+        )}
+      </Card>
+    </div>
+  );
 }
 
-const UserHero = ({
-  user,
-  setSearchParams,
-  mode,
-}: {
-  user: UserType;
-  setSearchParams: SetURLSearchParams;
-  mode: "default" | "edit";
-}) => {
+const UserHero = ({ user }: { user: UserType }) => {
   return (
     <div className="bg-primary-dark text-text-light relative flex flex-col items-center justify-center gap-4 rounded-lg p-4 text-center">
       <img
@@ -116,18 +158,6 @@ const UserHero = ({
         className="absolute top-0 left-0 z-10 h-full w-full rounded-lg object-cover"
         src="/bg-mockup.png"
       />
-
-      {mode === "default" ? (
-        <Edit2
-          className="absolute top-4 right-4 z-50 cursor-pointer hover:scale-110"
-          onClick={() => setSearchParams({ mode: "edit" })}
-        />
-      ) : (
-        <X
-          className="absolute top-4 right-4 z-50 cursor-pointer hover:scale-110"
-          onClick={() => setSearchParams({ mode: "default" })}
-        />
-      )}
     </div>
   );
 };
@@ -181,6 +211,47 @@ const Post = ({ post, user }: { post: Post; user: UserType }) => {
       </div>
       <h3 className="font-semibold">{post.title}</h3>
       <p className="text-pretty">{post.body}</p>
+    </div>
+  );
+};
+
+const Task = ({
+  task,
+  toggleTask,
+  deleteTask,
+}: {
+  task: Task;
+  toggleTask: (id: number) => void;
+  deleteTask: (id: number) => void;
+}) => {
+  const handleDelete = () => {
+    deleteTask(task.id);
+  };
+
+  return (
+    <div className="flex justify-between">
+      <label className="flex items-center gap-2">
+        <input
+          checked={task.completed}
+          className="accent-accent-blue size-4 rounded"
+          type="checkbox"
+          onChange={() => toggleTask(task.id)}
+        />
+        <span
+          className={task.completed ? "text-text-secondary line-through" : ""}
+        >
+          {task.title}
+        </span>
+      </label>
+      <Popover>
+        <PopoverTrigger>
+          <Ellipsis className="cursor-pointer" />
+        </PopoverTrigger>
+
+        <PopoverContent>
+          <PopoverItem onClick={handleDelete}>Delete</PopoverItem>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };
@@ -324,10 +395,71 @@ const Form = ({
         />
       </div>
 
-      <Button isLoading={isLoading} type="submit">
-        Save
-      </Button>
+      <div className="flex gap-4">
+        <Button
+          type="button"
+          variant="bordered"
+          onClick={() => setSearchParams({ mode: "default" })}
+        >
+          Cancel
+        </Button>
+        <Button isLoading={isLoading} type="submit">
+          Save
+        </Button>
+      </div>
     </form>
+  );
+};
+
+const TaskForm = ({
+  dispatch,
+  userId,
+}: {
+  dispatch: AppDispatch;
+  userId: number;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Typed form element to access email and password's values
+    const event = e.target as {
+      title: { value: string };
+    } & HTMLFormElement;
+
+    const title = event.title.value;
+
+    if (!title) return;
+    dispatch(addTask({ userId, title }));
+    setIsOpen(false);
+  };
+
+  return (
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <ModalTrigger
+        icon
+        className="absolute top-2 right-3 ml-auto w-fit scale-80"
+        variant="ghost"
+      >
+        <Plus />
+      </ModalTrigger>
+      <ModalContent title="Add task">
+        <form className="flex flex-col gap-4" onSubmit={handleAdd}>
+          <Input required name="title" placeholder="Task title" />
+          <div className="flex gap-4">
+            <Button
+              type="button"
+              variant="bordered"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">Add task</Button>
+          </div>
+        </form>
+      </ModalContent>
+    </Modal>
   );
 };
 
