@@ -18,7 +18,7 @@ function DashboardLayout({ children }: { children?: React.ReactNode }) {
   return (
     <div className="relative flex gap-4 p-4 max-md:gap-0">
       <Navbar />
-      <div className="bg-primary-light pt-12 scrollbar-gutter-stable text-text-dark border-primary-light overflow-auto-y h-[calc(100dvh-2rem)] w-full overflow-x-hidden rounded-3xl border-8 p-2 will-change-[right]">
+      <div className="bg-primary-light scrollbar-gutter-stable text-text-dark border-primary-light overflow-auto-y h-[calc(100dvh-2rem)] w-full overflow-x-hidden rounded-3xl border-8 p-2 max-md:pt-12 will-change-[right]">
         {children ?? <Outlet />}
       </div>
     </div>
