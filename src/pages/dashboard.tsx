@@ -164,7 +164,7 @@ function Dashboard() {
           </Card>
         </div>
         <DataTable
-          stripped
+          striped
           columns={columns}
           header={<h2 className="text-xl font-bold">Tasks</h2>}
           data={

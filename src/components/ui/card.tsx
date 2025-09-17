@@ -1,13 +1,18 @@
 import { cn } from "@sglara/cn";
 import type { HTMLAttributes } from "react";
 
-function CardGroup({ children, ...props }: HTMLAttributes<HTMLDivElement>) {
+function CardGroup({
+  children,
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
         "flex items-center *:rounded-none *:not-last:border-r-0 *:nth-[1]:rounded-l-lg *:nth-last-[1]:rounded-r-lg",
-        props.className,
+        className,
       )}
+      {...props}
     >
       {children}
     </div>

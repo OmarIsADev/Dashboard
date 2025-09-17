@@ -1,24 +1,22 @@
 import { cn } from "@sglara/cn";
 import { Loader2 } from "lucide-react";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 type ButtonVariant = "primary" | "secondary" | "bordered" | "ghost" | "danger";
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: ButtonVariant;
   className?: string;
-  style?: CSSProperties;
   isLoading?: boolean;
   icon?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Button = ({
   children,
   variant = "primary",
   className,
-  style,
   isLoading = false,
   icon,
   onClick,
@@ -43,14 +41,13 @@ const Button = ({
   return (
     <button
       disabled={isLoading}
-      style={style}
       className={cn(
-        "inline-flex w-full h-10 cursor-pointer items-center justify-center rounded-md px-4 py-2 transition",
+        "inline-flex h-10 w-full cursor-pointer items-center justify-center rounded-md px-4 py-2 transition",
         className,
         variantClassName,
         isLoading && `cursor-not-allowed ${isLoadingClassName}`,
         props.disabled && "cursor-not-allowed",
-        icon && "p-2 !aspect-square size-8",
+        icon && "!aspect-square size-8 p-2",
       )}
       onClick={onClick}
       {...props}

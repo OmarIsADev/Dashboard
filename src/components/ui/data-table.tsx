@@ -16,7 +16,7 @@ export interface columnType<T> {
 interface props<T extends object> {
   columns: columnType<T>[];
   header?: ReactElement;
-  stripped?: boolean;
+  striped?: boolean;
   pagenation?: boolean;
   data: T[];
 }
@@ -24,7 +24,7 @@ interface props<T extends object> {
 function DataTable<T extends { id: number }>({
   columns,
   header,
-  stripped,
+  striped,
   pagenation = true,
   data,
 }: props<T>) {
@@ -54,11 +54,11 @@ function DataTable<T extends { id: number }>({
   }
 
   return (
-    <Card className="text-base font-normal h-fit">
+    <Card className="h-fit text-base font-normal">
       {header}
       {data.length > 0 ? (
         <div className="overflow-x-scroll">
-          <table className="group w-full" data-stripped={stripped}>
+          <table className="group w-full" data-stripped={striped}>
             <thead className="sticky top-0">
               <tr className="bg-table-header-bg text-table-header-text *:nth-[1]:rounded-l-md *:nth-last-[1]:rounded-r-md">
                 {columns.map((column) => (
@@ -123,7 +123,7 @@ function DataTable<T extends { id: number }>({
                   variant="ghost"
                   className={cn(
                     "w-8",
-                    page === pageNumber ? "!bg-zinc-200": "",
+                    page === pageNumber ? "!bg-zinc-200" : "",
                   )}
                   onClick={() => setPage(pageNumber)}
                 >
@@ -143,7 +143,7 @@ function DataTable<T extends { id: number }>({
           </Button>
         </div>
       )}
-      </Card>
+    </Card>
   );
 }
 
