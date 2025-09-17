@@ -69,7 +69,10 @@ const usersColumns: columnType<User>[] = [
           </Link>
           <PopoverItem
             className="transition duration-75 hover:text-red-500"
-            onClick={() => store.dispatch(removeUser(data.id))}
+            onClick={() => {
+              store.dispatch(removeUser(data.id));
+              toast.success("User deleted");
+            }}
           >
             Delete
           </PopoverItem>

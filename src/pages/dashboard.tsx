@@ -62,7 +62,7 @@ const columns: columnType<Task & { user: User }>[] = [
   {
     header: "assignee",
     id: "user",
-    Cell: ({ data }) => <p className="line-clamp-2">{data.user.name}</p>,
+    Cell: ({ data }) => <p className="line-clamp-2">{data?.user?.name}</p>,
   },
 ];
 

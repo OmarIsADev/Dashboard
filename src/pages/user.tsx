@@ -35,7 +35,7 @@ import {
 import { cn } from "@sglara/cn";
 import { Modal, ModalContent, ModalTrigger } from "../components/ui/modal";
 
-type modes = "default" | "edit" | "tasks";
+type modes = "posts" | "edit" | "tasks";
 
 function User() {
   const { userId } = useParams();
@@ -59,7 +59,7 @@ function User() {
     searchParams.get("mode") as modes,
   )
     ? (searchParams.get("mode") as modes)
-    : "default";
+    : "posts";
 
   useEffect(() => {
     if (!user?.id) return;
@@ -88,13 +88,13 @@ function User() {
       <div
         className={cn(
           "bg-bg-card relative flex w-full cursor-pointer rounded-3xl p-1 text-center",
-          "before:bg-accent-blue before:absolute before:top-1/2 before:left-1/2 before:h-[calc(100%-0.5rem)] before:w-1/3 before:-translate-1/2 before:rounded-xl before:transition-transform before:ease-in-out before:content-['']",
-          mode === "default" && "before:-translate-x-[calc(150%-0.25rem)]",
-          mode === "tasks" && "",
+          "before:bg-accent-blue before:absolute before:top-1/2 before:left-1/2 before:h-[calc(100%-0.5rem)] before:w-1/3 before:-translate-y-1/2 before:rounded-xl before:transition-transform before:ease-in-out before:content-['']",
+          "before:-translate-x-[calc(150%-0.25rem)]",
+          mode === "tasks" && "before:-translate-x-1/2",
           mode === "edit" && "before:translate-x-[calc(50%-0.25rem)]",
         )}
       >
-        {["default", "tasks", "edit"].map((tab) => (
+        {["posts", "tasks", "edit"].map((tab) => (
           <span
             key={tab}
             className={cn(
@@ -432,6 +432,7 @@ const TaskForm = ({
 
     if (!title) return;
     dispatch(addTask({ userId, title }));
+    console.log(userId)
     setIsOpen(false);
   };
 
