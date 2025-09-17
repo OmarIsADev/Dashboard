@@ -62,15 +62,15 @@ function User() {
     : "default";
 
   useEffect(() => {
-    if (posts.length > 0 || !user) return;
+    if (!user?.id) return;
 
-    dispatch(fetchUserPosts(user.id));
-    dispatch(fetchUserTasks(user.id));
+    if (posts.length === 0) dispatch(fetchUserPosts(user.id));
+    if (tasks.length === 0) dispatch(fetchUserTasks(user.id));
   }, [user]);
 
   if (data.users.status === "loading") return <div>Loading...</div>;
 
-  if (!user || data.users.status === "failed")
+  if (!user?.id || data.users.status === "failed")
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 text-center">
         <h1 className="font-boldl text-lg">404 User Not found</h1>
